@@ -9,8 +9,6 @@
     </form>
 
     {% if request.method == 'POST' %}
-        <code>
-            {{ result }}
-        </code>
+        <pre>{{- result -}}</pre>
     {% endif %}
 {% endblock %}

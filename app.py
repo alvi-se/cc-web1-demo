@@ -50,8 +50,9 @@ def cloudy():
 @app.route('/cloudy/<path:file>')
 def cloudy_download(file):
     path_file = f'./cloudy/{file}'
+    logger.info(f'Sending file {os.path.realpath(path_file)}')
     if not os.path.isfile(path_file):
-        abort(404)
+        return abort(404)
     
     return send_file(path_file)
 
