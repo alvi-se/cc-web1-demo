@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Web Python{% endblock title %}
+{% block head %}
+{{ super() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block main %}
+    <h1>Web Python</h1>
+    <form action="{{ url_for('python') }}" method="POST">
+        <label for="code">Python code</label>
+        <textarea style="font-family: monospace;"></textarea>
+        <button type="submit">Execute</button>
+    </form>
+
+    {% if request.method == 'POST' %}
+        <code>
+            {{ result }}
+        </code>
+    {% endif %}
+{% endblock %}
