@@ -7,10 +7,16 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Web Python</h1>
+    <h1>Super Python Web Interpreter</h1>
     <form action="{{ url_for('python') }}" method="POST">
         <label for="code">Python code</label>
-        <textarea style="font-family: monospace;"></textarea>
+        <textarea
+            style="font-family: monospace;"
+            rows="10"
+            name="code"
+            id="code" >
+            {{- code if code is not none -}}
+            </textarea>
         <button type="submit">Execute</button>
     </form>
 

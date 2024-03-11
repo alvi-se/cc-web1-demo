@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Pinger{% endblock %}
+{% block title %}Ping pong{% endblock %}
 {% block main %}
-    <h1>Pinger</h1>
-    <form action="{{ url_for('pinger') }}" method="POST">
+    <h1>Ping Pong</h1>
+    <form action="{{ url_for('ping') }}" method="POST">
         <label for="address">Ping this address</label>
         <input name="address" id="address" type="text" value="{{ address if address is not none }}">
         <button type="submit">Ping</button>

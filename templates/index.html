@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}
+Super Secure Services
+{% endblock title %}
+{% block main %}
+<h1>Super Secure Services</h1>
+<ul>
+    <li>
+        <a href="{{ url_for('cloudy') }}">Cloudy</a>: the super protected cloud storage
+    </li>
+    <li>
+        <a href="{{ url_for('python') }}">Web Python</a>: blazing fast Python interpreter on the web
+    </li>
+    <li>
+        <a href="{{ url_for('ping') }}">Ping pong</a>: check that whether your favorite website is up 
+    </li>
+</ul>
+{% endblock main %}

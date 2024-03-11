@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+    Cloudy
+{% endblock title %}
+{% block main %}
+    <h1>Cloudy, with a chance of sensitive files</h1>
+    <ul>
+        {% for file in files %}
+        <li>
+            <a href="{{ url_for('cloudy_download', file=file) }}">{{file}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock main %}
