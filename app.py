@@ -1,13 +1,24 @@
+from http.client import HTTPConnection
+import logging
 from flask import Flask, request, render_template, send_file, abort
 import subprocess
+import ipaddress
 import os
+from werkzeug.exceptions import Forbidden
+import requests
 
 app = Flask(__name__)
 app.secret_key = 'thisShouldBeSecret'
-app.debug = True
 logger = app.logger
+logger.setLevel(logging.INFO)
 
 # http://localhost:5000/cloudy/..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd
+
+
+@app.errorhandler(Forbidden)
+def forbidden(exception):
+    return render_template('403.html'), 403
+
 
 @app.route('/ping', methods=['GET', 'POST'])
 def ping():
@@ -43,7 +54,7 @@ def python():
 @app.route('/cloudy')
 def cloudy():
     files = os.listdir('./cloudy')
-    print(files)
+    logger.info(f'Viewing files {files}')
     return render_template('cloudy.html', files=files)
 
 
@@ -57,13 +68,46 @@ def cloudy_download(file):
     return send_file(path_file)
 
 
+def http_raw(response: requests.Response):
+    raw = ''
+    for header,value in response.headers.items():
+        raw += f'{header}: {value}\n'
+
+    raw += '\n\n'
+    raw += response.text
+
+    return raw
+
+
+@app.route('/requestman', methods=['GET', 'POST'])
+def requestman():
+    res = None
+    exception = None
+    if request.method == 'POST':
+        try:
+            res = requests.request(request.form['http-method'], request.form['url'])
+            res = http_raw(res)
+        except requests.exceptions.RequestException as e:
+            exception = e
+        
+    return render_template('requestman.html', response=res, exception=exception)
+
+
+@app.route('/admin')
+def admin():
+    if not request.remote_addr or not ipaddress.ip_address(request.remote_addr).is_loopback:
+        return abort(403)
+
+    return render_template('admin.html')
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
 def main():
-    app.run()
+    app.run(host='0.0.0.0', debug=True)
 
 
 if __name__ == '__main__':
