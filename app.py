@@ -105,6 +105,9 @@ def admin():
 
 @app.route('/admin/stacca', methods=['GET', 'POST'])
 def stacca():
+    if not request.remote_addr or not ipaddress.ip_address(request.remote_addr).is_loopback:
+        return abort(403)
+
     if request.method == 'POST':
         if os.path.exists('red-button'):
             logger.warning('Deleting everything, goodbye cruel world...')
