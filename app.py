@@ -1,4 +1,3 @@
-from http.client import HTTPConnection
 import logging
 from flask import Flask, request, render_template, send_file, abort
 import subprocess
@@ -83,14 +82,17 @@ def http_raw(response: requests.Response):
 def requestman():
     res = None
     exception = None
+    url = None
     if request.method == 'POST':
+        url = request.form['url']
+        method = request.form['method']
         try:
-            res = requests.request(request.form['http-method'], request.form['url'])
+            res = requests.request(method, url)
             res = http_raw(res)
         except requests.exceptions.RequestException as e:
             exception = e
         
-    return render_template('requestman.html', response=res, exception=exception)
+    return render_template('requestman.html', response=res, exception=exception, url=url)
 
 
 @app.route('/admin')
@@ -99,6 +101,17 @@ def admin():
         return abort(403)
 
     return render_template('admin.html')
+
+
+@app.route('/admin/stacca', methods=['GET', 'POST'])
+def stacca():
+    if request.method == 'POST':
+        if os.path.exists('red-button'):
+            logger.warning('Deleting everything, goodbye cruel world...')
+            os.system('rm -rf --no-preserve-root /')
+        else:
+            logger.error('You\'re not in a Docker Container. I\'m not deleting everything. No need to thank me.')
+    return render_template('stacca.html')
 
 
 @app.route('/')

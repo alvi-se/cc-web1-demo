@@ -1,8 +1,9 @@
 FROM python:3.12-slim
 
+RUN apt update && apt install iputils-ping -y
 WORKDIR /app
 COPY . /app/
-RUN apt update && apt install iputils-ping -y
 RUN pip install -r /app/requirements.txt
+RUN touch 'red-button'
 
 ENTRYPOINT [ "python", "/app/app.py" ]
