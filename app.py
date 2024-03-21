@@ -68,11 +68,12 @@ def cloudy_download(file):
 
 
 def http_raw(response: requests.Response):
-    raw = ''
+    # requests uses only the HTTP/1.1 version, so I'm hardcoding it lmao
+    raw = f'HTTP/1.1 {response.status_code}\n'
     for header,value in response.headers.items():
         raw += f'{header}: {value}\n'
 
-    raw += '\n\n'
+    raw += '\n'
     raw += response.text
 
     return raw

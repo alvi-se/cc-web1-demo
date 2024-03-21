@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block title %}RequestMan{% endblock title %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js"></script>
+{% endblock head %}
 {% block main %}
     <h1>RequestMan</h1>
     <form method="post" action="{{ url_for('requestman') }}">
@@ -19,6 +25,13 @@
     </form>
     
 
-    <pre>{{- response if response is not none -}}</pre>
+    <pre><code class="language-http">{{- response if response is not none -}}</code></pre>
     <div>{{ exception.args[0] if exception is not none }}</div>
+
+    <script>
+        new Promise((resolve, reject) => {
+            hljs.highlightAll();
+            resolve();
+        });
+    </script>
 {% endblock main %}
