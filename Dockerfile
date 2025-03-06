@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-RUN apt update && apt install iputils-ping -y
+RUN apt update && apt install iputils-ping curl -y
 WORKDIR /app
 COPY . /app/
 RUN pip install -r /app/requirements.txt

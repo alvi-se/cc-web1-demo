@@ -5,6 +5,8 @@ import ipaddress
 import os
 from werkzeug.exceptions import Forbidden
 import requests
+import io
+import sys
 
 app = Flask(__name__)
 app.secret_key = 'thisShouldBeSecret'
@@ -43,10 +45,16 @@ def python():
     result = None
     if request.method == 'POST':
         code = request.form['code']
+        buffer = io.StringIO()
+        sys.stdout = buffer  # Reindirizziamo stdout al buffer
+        sys.stderr = buffer  # Per catturare anche gli errori
         try:
-            result = eval(code)
-        except ValueError as e:
+            exec(code)
+            result = buffer.getvalue()
+        except Exception as e:
             result = 'Exception: ' + str(e.args)
+        sys.stdout = sys.__stdout__  # Ripristiniamo stdout
+        sys.stderr = sys.__stderr__  # Ripristiniamo stderr
     return render_template('python.html', code=code, result=result)
 
 
@@ -124,7 +132,7 @@ def index():
 
 
 def main():
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True, port=80)
 
 
 if __name__ == '__main__':
